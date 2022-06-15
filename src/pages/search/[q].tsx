@@ -47,8 +47,13 @@ function Search() {
         <DisplayAllVideos data={response.data} />
       ) : (
         <Alert variant="danger">
-          <Alert.Heading>An error occured!</Alert.Heading>
-          <p>{response.message}</p>
+          <Alert.Heading>An error has occurred!</Alert.Heading>
+          <hr />
+          <p
+            dangerouslySetInnerHTML={{
+              __html: response.message,
+            }}
+          ></p>
         </Alert>
       )}
     </Layout>
