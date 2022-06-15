@@ -6,8 +6,7 @@ import ffmpeg from "fluent-ffmpeg";
 
 ffmpeg.setFfmpegPath(ffmpegPath.path);
 
-// const PUBLIC_DIR = `${process.cwd()}/public`;
-const PUBLIC_DIR = ".";
+const PUBLIC_DIR = `${process.cwd()}/public`;
 
 export const getVideoDetails = async (url: string): Promise<VideoDetails> => {
   return await new Promise(async (resolve) => {
@@ -31,7 +30,7 @@ export const downloadVideo = async (
 ): Promise<any> => {
   return await new Promise(async (resolve, reject) => {
     const videoID = ytdl.getURLVideoID(url);
-    const fileName = encodeURIComponent(await getVideoTitle(url));
+    const fileName = await (await getVideoTitle(url)).replace(/\"/g, "'");
 
     if (format === "mp3") {
       if (fs.existsSync(`${PUBLIC_DIR}/download/mp3/${fileName}.mp3`)) {

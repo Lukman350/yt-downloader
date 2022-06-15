@@ -14,7 +14,7 @@ function DisplayAllVideos({ data }: { data: Result }) {
 
     const swal = withReactContent(Swal);
 
-    const swalWithBootstrapButtons = Swal.mixin({
+    const swalWithBootstrapButtons = swal.mixin({
       customClass: {
         confirmButton: "btn btn-primary",
         cancelButton: "btn btn-info",
@@ -52,10 +52,7 @@ function DisplayAllVideos({ data }: { data: Result }) {
                     "success"
                   )
                   .then(() => {
-                    window.open(
-                      response.data.url,
-                      "_blank"
-                    );
+                    window.open(response.data.url, "_blank");
                   });
               } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire(
@@ -95,7 +92,11 @@ function DisplayAllVideos({ data }: { data: Result }) {
                   <Card bg="secondary" className="text-white shadow-lg mb-3">
                     <Card.Body>
                       <Card.Title>{video.title}</Card.Title>
-                      <Card.Text>Duration: {video.duration}</Card.Text>
+                      <Card.Text>
+                        Duration: {video.duration}
+                        <br />
+                        <strong>{video.author?.name}</strong>
+                      </Card.Text>
 
                       <div className="d-flex justify-content-evenly">
                         <Button
