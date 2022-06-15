@@ -11,7 +11,7 @@ $theme-colors: (
 $body-bg: #dbdffd;
 $body-color: #343a40;
 
-@import "~bootstrap/scss/bootstrap.scss";
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
 
 body {
   font-family: "Poppins", sans-serif;
