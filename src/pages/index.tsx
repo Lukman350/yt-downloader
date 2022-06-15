@@ -55,9 +55,7 @@ function Home() {
         .then((res: APIResponseTypes) => {
           if (res.success) {
             setDone(
-              `${process.env.NEXT_PUBLIC_BASE_URL}${decodeURIComponent(
-                res.data.url
-              )}`
+              `${process.env.NEXT_PUBLIC_BASE_URL}${res.data.url}`
             );
             setValidated(true);
             setErrorMessage("");
@@ -107,9 +105,7 @@ function Home() {
         .then((res: APIResponseTypes) => {
           if (res.success) {
             setDone(
-              `${process.env.NEXT_PUBLIC_BASE_URL}${decodeURIComponent(
-                res.data.url
-              )}`
+              `${process.env.NEXT_PUBLIC_BASE_URL}${res.data.url}`
             );
             setValidated(true);
             setErrorMessage("");

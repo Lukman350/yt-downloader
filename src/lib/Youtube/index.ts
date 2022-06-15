@@ -30,7 +30,7 @@ export const downloadVideo = async (
 ): Promise<any> => {
   return await new Promise(async (resolve, reject) => {
     const videoID = ytdl.getURLVideoID(url);
-    const fileName = await encodeURIComponent(await getVideoTitle(url));
+    const fileName = encodeURIComponent(await getVideoTitle(url));
 
     if (format === "mp3") {
       if (fs.existsSync(`${PUBLIC_DIR}/download/mp3/${fileName}.mp3`)) {

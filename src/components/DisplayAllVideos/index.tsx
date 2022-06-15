@@ -53,7 +53,7 @@ function DisplayAllVideos({ data }: { data: Result }) {
                   )
                   .then(() => {
                     window.open(
-                      decodeURIComponent(response.data.url),
+                      response.data.url,
                       "_blank"
                     );
                   });

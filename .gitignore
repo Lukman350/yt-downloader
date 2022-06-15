@@ -27,7 +27,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
 
 # vercel
 .vercel
@@ -36,5 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 # output file
-*.mp3
-*.mp4
+/public/download/mp3/*.mp3
+/public/download/mp4/*.mp4
