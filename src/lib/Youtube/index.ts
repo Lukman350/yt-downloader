@@ -74,17 +74,23 @@ export const downloadVideo = async (
                 filter: "videoandaudio",
               });
 
-              stream
-                .pipe(
-                  fs.createWriteStream(
-                    `${PUBLIC_DIR}/download/mp4/${fileName}-${quality}.mp4`
-                  )
+              stream.pipe(
+                fs.createWriteStream(
+                  `${PUBLIC_DIR}/download/mp4/${fileName}-${quality}.mp4`
                 )
-                .on("end", () => {
-                  resolve({
-                    url: `/download/mp4/${fileName}-${quality}.mp4`,
-                  });
+              );
+
+              stream.on("error", (err) => {
+                reject({
+                  message: err.message,
                 });
+              });
+
+              stream.on("end", () => {
+                resolve({
+                  url: `/download/mp4/${fileName}-${quality}.mp4`,
+                });
+              });
             } else {
               reject(
                 new Error(
