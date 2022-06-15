@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["localhost:3000", "i.ytimg.com"],
+    domains: ["yt-downloader-one.vercel.app", "i.ytimg.com"],
   },
 };
 
