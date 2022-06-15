@@ -7,6 +7,7 @@ import ffmpeg from "fluent-ffmpeg";
 ffmpeg.setFfmpegPath(ffmpegPath.path);
 
 // const PUBLIC_DIR = `${process.cwd()}/public`;
+const PUBLIC_DIR = `./public`;
 
 export const getVideoDetails = async (url: string): Promise<VideoDetails> => {
   return await new Promise(async (resolve) => {
@@ -33,7 +34,7 @@ export const downloadVideo = async (
     const fileName = encodeURIComponent(await getVideoTitle(url));
 
     if (format === "mp3") {
-      if (fs.existsSync(`public/download/mp3/${fileName}.mp3`)) {
+      if (fs.existsSync(`${PUBLIC_DIR}/download/mp3/${fileName}.mp3`)) {
         resolve({ url: `/download/mp3/${fileName}.mp3` });
       } else {
         let stream = ytdl(videoID, {
@@ -43,7 +44,7 @@ export const downloadVideo = async (
 
         ffmpeg(stream)
           .audioBitrate(128)
-          .save(`public/download/mp3/${fileName}.mp3`)
+          .save(`${PUBLIC_DIR}/download/mp3/${fileName}.mp3`)
           .on("error", (err) => {
             reject(new Error(err));
           })
@@ -53,7 +54,9 @@ export const downloadVideo = async (
       }
     } else if (format === "mp4") {
       if (quality !== "") {
-        if (fs.existsSync(`public/download/mp4/${fileName}-${quality}.mp4`)) {
+        if (
+          fs.existsSync(`${PUBLIC_DIR}/download/mp4/${fileName}-${quality}.mp4`)
+        ) {
           resolve({
             url: `/download/mp4/${fileName}-${quality}.mp4`,
           });
@@ -75,7 +78,7 @@ export const downloadVideo = async (
               stream
                 .pipe(
                   fs.createWriteStream(
-                    `public/download/mp4/${fileName}-${quality}.mp4`
+                    `${PUBLIC_DIR}/download/mp4/${fileName}-${quality}.mp4`
                   )
                 )
                 .on("end", () => {
