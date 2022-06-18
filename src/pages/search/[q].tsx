@@ -1,61 +1,46 @@
 import callAPI, { APIResponseTypes } from "@/lib/API";
 import Layout from "@/components/Layout";
 import DisplayAllVideos from "@/components/DisplayAllVideos";
-import { Alert } from "react-bootstrap";
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Loading from "@/components/Loading";
-import { Container, Row, Col, Pagination } from "react-bootstrap";
-import { Result } from "ytsr";
+import swal from "@/components/Swal";
+import useSWR from "swr";
 
-function Search() {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [response, setResponse] = useState<APIResponseTypes>({
-    success: true,
-    data: null,
-    message: "",
-  });
+function useSearch(query: string): {
+  data: APIResponseTypes;
+  isLoading: boolean;
+  isError: Error;
+} {
+  const fetcher = async (path: string) =>
+    await callAPI({ path, method: "GET" });
 
-  const router = useRouter();
-
-  const fetchData = async (query: string) => {
-    setLoading(true);
-
-    const response: APIResponseTypes = await callAPI({
-      path: `search?q=${query}&limit=20`,
-      method: "GET",
-    });
-
-    setResponse(response);
-
-    setLoading(false);
+  const { data, error } = useSWR(`search/?q=${query}&limit=20`, fetcher) as {
+    data: any;
+    error: Error;
   };
 
-  useEffect(() => {
-    fetchData(router.query.q as string);
-  }, [router]);
+  return {
+    data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
 
-  if (loading) {
-    return <Loading />;
-  }
+function Search() {
+  const router = useRouter();
+
+  const { q } = router.query as { q: string };
+
+  const { data, isLoading, isError } = useSearch(q);
+
+  if (isLoading) return <Loading />;
+  if (isError) return swal.error("An error has occurred", isError.message);
 
   return (
     <Layout title="YT Downloader - Search">
       <h3 className="h3 text-center p-4">YouTube Downloader - Search</h3>
 
-      {!loading && response.success ? (
-        <DisplayAllVideos data={response.data} />
-      ) : (
-        <Alert variant="danger">
-          <Alert.Heading>An error has occurred!</Alert.Heading>
-          <hr />
-          <p
-            dangerouslySetInnerHTML={{
-              __html: response.message,
-            }}
-          ></p>
-        </Alert>
-      )}
+      {data && <DisplayAllVideos data={data.data} />}
     </Layout>
   );
 }

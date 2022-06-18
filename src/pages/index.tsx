@@ -17,6 +17,7 @@ import Image from "next/image";
 import callAPI from "@/lib/API";
 import type { APIResponseTypes } from "@/lib/API";
 import { useRouter } from "next/router";
+import swal from "@/components/Swal";
 
 function FormatTime(seconds: number): string {
   const date = new Date(seconds * 1000);
@@ -27,10 +28,7 @@ function FormatTime(seconds: number): string {
 
 function Home() {
   const [url, setUrl] = useState<string>("");
-  const [validated, setValidated] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const [result, setResult] = useState<VideoDetails>();
-  const [show, setShow] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [quality, setQuality] = useState<any>("");
   const [done, setDone] = useState<string>("");
@@ -55,20 +53,14 @@ function Home() {
         .then((res: APIResponseTypes) => {
           if (res.success) {
             setDone(`${process.env.NEXT_PUBLIC_BASE_URL}${res.data.url}`);
-            setValidated(true);
-            setErrorMessage("");
           } else {
-            setShow(true);
-            setValidated(false);
-            setErrorMessage(res.message);
+            swal.error("An error has occurred", res.message);
           }
 
           setLoading(false);
         })
         .catch((err: any) => {
-          setValidated(false);
-          setShow(true);
-          setErrorMessage(err);
+          swal.error("An error has occurred", err);
           setLoading(false);
         });
     }
@@ -82,9 +74,7 @@ function Home() {
 
     if (url) {
       if (quality === "") {
-        setValidated(false);
-        setShow(true);
-        setErrorMessage("Please select a quality");
+        swal.error("An error has occurred", "Please select a quality");
         setLoading(false);
         setDone("");
 
@@ -103,20 +93,14 @@ function Home() {
         .then((res: APIResponseTypes) => {
           if (res.success) {
             setDone(`${process.env.NEXT_PUBLIC_BASE_URL}${res.data.url}`);
-            setValidated(true);
-            setErrorMessage("");
           } else {
-            setShow(true);
-            setValidated(false);
-            setErrorMessage(res.message);
+            swal.error("An error has occurred", res.message);
           }
 
           setLoading(false);
         })
         .catch((err: any) => {
-          setValidated(false);
-          setShow(true);
-          setErrorMessage(err);
+          swal.error("An error has occurred", err);
           setLoading(false);
         });
     }
@@ -127,9 +111,7 @@ function Home() {
     e.stopPropagation();
 
     if (!url) {
-      setValidated(false);
-      setShow(true);
-      setErrorMessage("Please enter a valid URL");
+      swal.error("An error has occurred", "Please enter a valid URL");
       return;
     }
 
@@ -139,36 +121,19 @@ function Home() {
     })
       .then((res: APIResponseTypes) => {
         if (res.success === false) {
-          setValidated(false);
-          setShow(true);
-          setErrorMessage(res.message);
+          swal.error("An error has occurred", res.message);
         } else {
-          setValidated(true);
-          setErrorMessage("");
           setResult(res.data);
         }
       })
       .catch((err) => {
-        setValidated(false);
-        setShow(true);
-        setErrorMessage(err);
+        swal.error("An error has occurred", err);
       });
   };
 
   return (
     <Layout title="YT Downloader">
       <h3 className="h3 text-center p-4">YouTube Downloader</h3>
-      {!validated && show ? (
-        <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-          <Alert.Heading>An error has occurred!</Alert.Heading>
-          <hr />
-          <p
-            dangerouslySetInnerHTML={{
-              __html: errorMessage,
-            }}
-          ></p>
-        </Alert>
-      ) : null}
       <Card bg="secondary" className="text-white shadow-lg">
         <Card.Header>
           <Card.Title>Input YouTube video below:</Card.Title>
@@ -182,25 +147,12 @@ function Home() {
                   placeholder="Enter video URL here..."
                   onChange={(e) => setUrl(e.target.value)}
                 />
-                {!validated && show ? (
-                  <Button variant="primary" type="button" disabled>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />{" "}
-                    Loading...
-                  </Button>
-                ) : (
-                  <Button variant="primary" type="submit">
-                    <span>
-                      <MdSearch fontSize={"1.4em"} />
-                    </span>{" "}
-                    Search
-                  </Button>
-                )}
+                <Button variant="primary" type="submit">
+                  <span>
+                    <MdSearch fontSize={"1.4em"} />
+                  </span>{" "}
+                  Search
+                </Button>
               </InputGroup>
             </Form.Group>
           </Form>

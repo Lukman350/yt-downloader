@@ -3,24 +3,13 @@ import { Result, Item } from "ytsr";
 import { MdSettings, MdPlayCircle } from "react-icons/md";
 import callAPI from "@/lib/API";
 import type { APIResponseTypes } from "@/lib/API";
-import withReactContent from "sweetalert2-react-content";
-import Swal from "sweetalert2";
+import swal from "@/components/Swal";
 
 function DisplayAllVideos({ data }: { data: Result }) {
   const downloadVideos = async (event: any, url: string) => {
     event.preventDefault();
 
     event.target.disabled = true;
-
-    const swal = withReactContent(Swal);
-
-    const swalWithBootstrapButtons = swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-info",
-      },
-      buttonsStyling: false,
-    });
 
     await callAPI({
       path: `download/`,
@@ -33,49 +22,40 @@ function DisplayAllVideos({ data }: { data: Result }) {
     })
       .then((response: APIResponseTypes) => {
         if (response.success) {
-          swalWithBootstrapButtons
-            .fire({
-              title: "File successfully converted!",
-              text: "Click the button below to download the file.",
-              icon: "info",
-              showCancelButton: true,
-              confirmButtonText: "Download",
-              cancelButtonText: "Cancel",
-              reverseButtons: true,
-            })
+          swal
+            .custom(
+              "File successfully converted!",
+              "Click the button below to download the file.",
+              "info",
+              true,
+              "Download",
+              "Cancel",
+              true
+            )
             .then((result) => {
               if (result.isConfirmed) {
-                swalWithBootstrapButtons
-                  .fire(
+                swal
+                  .success(
                     "Downloaded!",
-                    "You'll be redirected to the download page.",
-                    "success"
+                    "Click the button below to download the file."
                   )
                   .then(() => {
                     window.open(response.data.url, "_blank");
                   });
-              } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swalWithBootstrapButtons.fire(
-                  "Cancelled",
-                  "Your file is safe :)",
-                  "error"
-                );
+              } else if (result.dismiss === 0) {
+                swal.error("Cancelled", "Your file is safe :)");
               }
             });
 
           event.target.disabled = false;
         } else {
-          swalWithBootstrapButtons.fire("Error", response.message, "error");
+          swal.error("Error", response.message);
 
           event.target.disabled = false;
         }
       })
       .catch((error) => {
-        swalWithBootstrapButtons.fire(
-          "Error",
-          "An error occured while converting the file.",
-          "error"
-        );
+        swal.error("Error", error.message);
 
         event.target.disabled = false;
       });

@@ -6,7 +6,7 @@ import ffmpeg from "fluent-ffmpeg";
 
 ffmpeg.setFfmpegPath(ffmpegPath.path);
 
-const PUBLIC_DIR = `${process.cwd()}`;
+const PUBLIC_DIR = `${process.cwd()}/public`;
 
 export const getVideoDetails = async (url: string): Promise<VideoDetails> => {
   return await new Promise(async (resolve) => {
@@ -30,7 +30,7 @@ export const downloadVideo = async (
 ): Promise<any> => {
   return await new Promise(async (resolve, reject) => {
     const videoID = ytdl.getURLVideoID(url);
-    const fileName = await (await getVideoTitle(url)).replace(/\"/g, "'");
+    const fileName = await (await getVideoTitle(url)).replace(/\"/g, "_");
 
     if (format === "mp3") {
       if (fs.existsSync(`${PUBLIC_DIR}/download/mp3/${fileName}.mp3`)) {
@@ -94,14 +94,14 @@ export const downloadVideo = async (
             } else {
               reject(
                 new Error(
-                  `${quality} is not available<br />Please try again with a different quality`
+                  `${quality} is not available. Please try again with a different quality`
                 )
               );
             }
           } else {
             reject(
               new Error(
-                "This video does not have the quality you requested<br />Please try again with a different quality"
+                "This video does not have the quality you requested. Please try again with a different quality"
               )
             );
           }
