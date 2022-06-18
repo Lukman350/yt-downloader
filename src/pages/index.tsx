@@ -27,7 +27,6 @@ function FormatTime(seconds: number): string {
 }
 
 function Home() {
-  console.log(`[index.tsx] Home(): ${process.cwd()} dir: ${__dirname}`);
   const [url, setUrl] = useState<string>("");
   const [result, setResult] = useState<VideoDetails>();
   const [loading, setLoading] = useState<boolean>(false);
