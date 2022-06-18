@@ -18,11 +18,35 @@ function Layout({ title, children }: LayoutTypes) {
 
       <MainNav />
 
-      <main>
+      <main className="mb-5" style={{ minHeight: "72.8vh" }}>
         <Container fluid="sm">
-          <div style={{ maxWidth: "780px", margin: "0 auto" }}>{children}</div>
+          <section style={{ maxWidth: "780px", margin: "0 auto" }}>
+            {children}
+          </section>
         </Container>
       </main>
+
+      <footer className="position-relative left-0 right-0 bottom-0 bg-secondary text-light w-100">
+        <Container fluid="sm">
+          <section className="pt-3 pb-1">
+            <p>
+              Made with{" "}
+              <span role="img" aria-label="heart">
+                ❤️
+              </span>{" "}
+              by{" "}
+              <a
+                href="https://instagram.com/lukmaan.24"
+                className="link-light text-decoration-none"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Lukman
+              </a>
+            </p>
+          </section>
+        </Container>
+      </footer>
     </>
   );
 }

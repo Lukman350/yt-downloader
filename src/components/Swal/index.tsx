@@ -25,10 +25,10 @@ const mySwal = withReactContent(Swal);
 
 const customSwal = mySwal.mixin({
   customClass: {
-    confirmButton: "btn btn-primary",
-    cancelButton: "btn btn-info",
+    confirmButton: "btn btn-primary ml-2",
+    cancelButton: "btn btn-info mr-2",
   },
-  buttonsStyling: false,
+  buttonsStyling: true,
 });
 
 const swal: swalProps = {

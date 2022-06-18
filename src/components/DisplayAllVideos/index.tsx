@@ -1,15 +1,19 @@
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
 import { Result, Item } from "ytsr";
 import { MdSettings, MdPlayCircle } from "react-icons/md";
 import callAPI from "@/lib/API";
 import type { APIResponseTypes } from "@/lib/API";
 import swal from "@/components/Swal";
+import Image from "next/image";
+import { useState } from "react";
 
 function DisplayAllVideos({ data }: { data: Result }) {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const downloadVideos = async (event: any, url: string) => {
     event.preventDefault();
 
-    event.target.disabled = true;
+    setLoading(true);
 
     await callAPI({
       path: `download/`,
@@ -26,7 +30,7 @@ function DisplayAllVideos({ data }: { data: Result }) {
             .custom(
               "File successfully converted!",
               "Click the button below to download the file.",
-              "info",
+              "success",
               true,
               "Download",
               "Cancel",
@@ -34,30 +38,23 @@ function DisplayAllVideos({ data }: { data: Result }) {
             )
             .then((result) => {
               if (result.isConfirmed) {
-                swal
-                  .success(
-                    "Downloaded!",
-                    "Click the button below to download the file."
-                  )
-                  .then(() => {
-                    window.open(response.data.url, "_blank");
-                  });
-              } else if (result.dismiss === 0) {
+                window.open(response.data.url, "_blank");
+              } else if (result.dismiss === 1) {
                 swal.error("Cancelled", "Your file is safe :)");
               }
             });
 
-          event.target.disabled = false;
+          setLoading(false);
         } else {
           swal.error("Error", response.message);
 
-          event.target.disabled = false;
+          setLoading(false);
         }
       })
       .catch((error) => {
         swal.error("Error", error.message);
 
-        event.target.disabled = false;
+        setLoading(false);
       });
   };
 
@@ -71,6 +68,13 @@ function DisplayAllVideos({ data }: { data: Result }) {
                 <Col key={idx} md={6} lg={6} sm={12}>
                   <Card bg="secondary" className="text-white shadow-lg mb-3">
                     <Card.Body>
+                      <Image
+                        className="img-thumbnail"
+                        src={video.bestThumbnail?.url as string}
+                        width={video.bestThumbnail?.width}
+                        height={video.bestThumbnail?.height}
+                        alt={video.title}
+                      />
                       <Card.Title>{video.title}</Card.Title>
                       <Card.Text>
                         Duration: {video.duration}
@@ -83,11 +87,27 @@ function DisplayAllVideos({ data }: { data: Result }) {
                           variant="primary"
                           type="button"
                           onClick={(e) => downloadVideos(e, video.url)}
+                          disabled={loading}
                         >
-                          <span>
-                            <MdSettings fontSize={"1.4em"} />
-                          </span>{" "}
-                          Convert to MP3
+                          {loading ? (
+                            <>
+                              <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                              />{" "}
+                              Converting...
+                            </>
+                          ) : (
+                            <>
+                              <span>
+                                <MdSettings fontSize={"1.4em"} />
+                              </span>{" "}
+                              Convert to MP3{" "}
+                            </>
+                          )}
                         </Button>
 
                         <a

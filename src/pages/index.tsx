@@ -27,7 +27,6 @@ function FormatTime(seconds: number): string {
 }
 
 function Home() {
-  console.log(`[index.tsx log]: ${__dirname}`);
   const [url, setUrl] = useState<string>("");
   const [result, setResult] = useState<VideoDetails>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -134,7 +133,7 @@ function Home() {
 
   return (
     <Layout title="YT Downloader">
-      <h3 className="h3 text-center p-4">YouTube Downloader</h3>
+      <h3 className="h3 text-center p-4 fw-bold">YouTube Downloader</h3>
       <Card bg="secondary" className="text-white shadow-lg">
         <Card.Header>
           <Card.Title>Input YouTube video below:</Card.Title>

@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-function Loading() {
+export default function Loading() {
   return (
     <Layout title="YT Downloader - Search">
       <h3 className="h3 text-center p-4">YouTube Downloader - Search</h3>
@@ -24,5 +24,3 @@ function Loading() {
     </Layout>
   );
 }
-
-export default Loading;

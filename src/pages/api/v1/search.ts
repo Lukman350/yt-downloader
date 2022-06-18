@@ -8,9 +8,10 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "GET": {
-      const { q, limit } = req.query as {
+      const { q, limit, page } = req.query as {
         q: string;
         limit: string;
+        page: string;
       };
 
       if (!q || !limit) {
@@ -25,6 +26,7 @@ export default async function handler(
       try {
         const results: Result = await ytsr(q, {
           limit: parseInt(limit),
+          pages: page ? parseInt(page) : 1,
           gl: "ID",
           hl: "id",
         });

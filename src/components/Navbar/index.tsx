@@ -43,7 +43,9 @@ function MainNav() {
                   onChange={(e) => setQuery(e.target.value)}
                 />
                 <Button variant="primary" type="submit">
-                  <MdSearch fontSize={"1.5em"} />
+                  <span aria-label="Search here">
+                    <MdSearch fontSize={"1.5em"} />
+                  </span>
                 </Button>
               </InputGroup>
             </Form>

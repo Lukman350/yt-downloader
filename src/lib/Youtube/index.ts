@@ -6,8 +6,8 @@ import ffmpeg from "fluent-ffmpeg";
 
 ffmpeg.setFfmpegPath(ffmpegPath.path);
 
-// const PUBLIC_DIR = `${process.cwd()}/public`;
-const PUBLIC_DIR = ".";
+const PUBLIC_DIR = `${process.cwd()}/public`;
+// const PUBLIC_DIR = ".";
 
 export const getVideoDetails = async (url: string): Promise<VideoDetails> => {
   return await new Promise(async (resolve) => {
