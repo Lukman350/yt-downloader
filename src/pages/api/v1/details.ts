@@ -8,48 +8,47 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<APIResponseTypes>
 ) {
-  if (req.method !== "GET") {
-    res.status(405).json({
-      success: false,
-      data: null,
-      message: "Method not allowed",
-    });
-    return;
-  }
+  switch (req.method) {
+    case "GET": {
+      const { url } = req.query as { url: string };
 
-  const { url } = req.query as { url: string };
+      if (!url) {
+        res.status(400).json({
+          success: false,
+          data: null,
+          message: "Missing url",
+        });
+        return;
+      }
 
-  if (!url) {
-    res.status(400).json({
-      success: false,
-      data: null,
-      message: "Missing url",
-    });
-    return;
-  }
+      if (isVideoValid(url) === false) {
+        res.status(400).json({
+          success: false,
+          data: null,
+          message: "No video found with that url",
+        });
+        return;
+      }
 
-  if (isVideoValid(url) === false) {
-    res.status(400).json({
-      success: false,
-      data: null,
-      message: "No video found with that url",
-    });
-    return;
-  }
+      try {
+        await getVideoDetails(url).then((video: VideoDetails) => {
+          res.status(200).json({
+            success: true,
+            data: video,
+            message: "",
+          });
+        });
+      } catch (err: any) {
+        res.status(500).json({
+          success: false,
+          data: null,
+          message: err,
+        });
+      }
+    }
 
-  try {
-    await getVideoDetails(url).then((video: VideoDetails) => {
-      res.status(200).json({
-        success: true,
-        data: video,
-        message: "",
-      });
-    });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: err,
-    });
+    default:
+      res.setHeader("Allow", ["GET"]);
+      res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
