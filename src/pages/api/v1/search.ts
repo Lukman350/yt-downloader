@@ -41,6 +41,8 @@ export default async function handler(
           message: err,
         });
       }
+
+      break;
     }
 
     default:
