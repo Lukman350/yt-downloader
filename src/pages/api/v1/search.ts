@@ -1,4 +1,4 @@
-import ytsr, { Result } from "ytsr";
+import ytsr, { Result, Item } from "ytsr";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { APIResponseTypes } from "@/lib/API";
 
@@ -8,32 +8,38 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "GET": {
-      const { q, limit, page } = req.query as {
+      const { q } = req.query as {
         q: string;
-        limit: string;
-        page: string;
       };
 
-      if (!q || !limit) {
+      if (!q) {
         res.status(400).json({
           success: false,
           data: null,
-          message: "Please provide a search query and limit",
+          message: "Please provide a search query",
         });
         return;
       }
 
       try {
+        const response = {
+          items: [] as Item[],
+        };
+
         const results: Result = await ytsr(q, {
-          limit: parseInt(limit),
-          pages: page ? parseInt(page) : 1,
           gl: "ID",
           hl: "id",
         });
 
+        results.items.forEach((item: Item) => {
+          if (item.type === "video") {
+            response.items.push(item);
+          }
+        });
+
         res.status(200).json({
           success: true,
-          data: results,
+          data: response,
           message: "",
         });
       } catch (err: any) {
