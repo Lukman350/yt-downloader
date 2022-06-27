@@ -28,7 +28,7 @@ function Layout({ title, children }: LayoutTypes) {
 
       <footer className="position-relative left-0 right-0 bottom-0 bg-secondary text-light w-100">
         <Container fluid="sm">
-          <section className="pt-3 pb-1">
+          <section className="pt-4 pb-1">
             <p>
               Made with{" "}
               <span role="img" aria-label="heart">
@@ -37,7 +37,7 @@ function Layout({ title, children }: LayoutTypes) {
               by{" "}
               <a
                 href="https://instagram.com/lukmaan.24"
-                className="link-light text-decoration-none"
+                className="link-primary text-decoration-underline"
                 target="_blank"
                 rel="noreferrer"
               >
