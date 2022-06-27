@@ -14,7 +14,7 @@ function useSearch(query: string): {
   const fetcher = async (path: string) =>
     await callAPI({ path, method: "GET" });
 
-  const { data, error } = useSWR(`search/?q=${query}&limit=20`, fetcher, {
+  const { data, error } = useSWR(`search/?q=${query}`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnMount: true,
     revalidateOnReconnect: true,
