@@ -11,8 +11,6 @@ function DisplayAllVideos({ data }: { data: Result }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<number>(10);
 
-  console.log(data);
-
   const downloadVideos = async (event: any, url: string) => {
     event.preventDefault();
 
